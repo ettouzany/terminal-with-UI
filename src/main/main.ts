@@ -68,14 +68,17 @@ class TerminalApp {
   }
 
   private setupIPC(): void {
-    ipcMain.handle('create-terminal', (event, terminalId: string) => {
+    ipcMain.handle('create-terminal', (event, terminalId: string, cwd?: string) => {
       const shell = os.platform() === 'win32' ? 'powershell.exe' : process.env.SHELL || '/bin/bash';
+      
+      // Use provided cwd, fall back to user's home directory, then process.cwd()
+      const workingDir = cwd || os.homedir() || process.cwd();
       
       const terminal = pty.spawn(shell, [], {
         name: 'xterm-color',
         cols: 80,
         rows: 24,
-        cwd: process.cwd(),
+        cwd: workingDir,
         env: process.env as { [key: string]: string },
       });
 
@@ -119,6 +122,14 @@ class TerminalApp {
         return { success: true };
       }
       return { success: false, error: 'Terminal not found' };
+    });
+
+    ipcMain.handle('get-cwd', () => {
+      return { success: true, cwd: process.cwd() };
+    });
+
+    ipcMain.handle('get-home-dir', () => {
+      return { success: true, homeDir: os.homedir() };
     });
   }
 }

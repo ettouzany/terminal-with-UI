@@ -99,7 +99,7 @@ export const StatusBar: React.FC = () => {
   });
 
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [currentPath, setCurrentPath] = useState('/Users/user');
+  const [currentPath, setCurrentPath] = useState('/Users');
 
   useEffect(() => {
     const updateSystemStats = () => {
@@ -125,15 +125,31 @@ export const StatusBar: React.FC = () => {
       setCurrentTime(new Date());
     };
 
+    const updateCurrentPath = async () => {
+      try {
+        if (window.terminalAPI) {
+          const result = await window.terminalAPI.getCwd();
+          if (result.success && result.cwd) {
+            setCurrentPath(result.cwd);
+          }
+        }
+      } catch (error) {
+        console.warn('Failed to get current working directory for status bar');
+      }
+    };
+
     updateSystemStats();
     updateGitInfo();
+    updateCurrentPath();
 
     const statsInterval = setInterval(updateSystemStats, 5000);
     const timeInterval = setInterval(updateTime, 1000);
+    const pathInterval = setInterval(updateCurrentPath, 10000); // Update path every 10 seconds
 
     return () => {
       clearInterval(statsInterval);
       clearInterval(timeInterval);
+      clearInterval(pathInterval);
     };
   }, []);
 
