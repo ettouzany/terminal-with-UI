@@ -67,3 +67,12 @@ body {
   overflow: hidden;
   resize: none;
 }
+
+/* Force transparent background when video overlay is active */
+.video-overlay-active .xterm-screen {
+  background: rgba(0, 0, 0, 0.3) !important;
+}
+
+.video-overlay-active .xterm-viewport {
+  background: transparent !important;
+}

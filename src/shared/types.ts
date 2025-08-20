@@ -20,6 +20,8 @@ export type WidgetCategory =
   | 'productivity' 
   | 'monitoring' 
   | 'development' 
+  | 'media'
+  | 'entertainment'
   | 'custom';
 
 export interface WidgetInstance {
@@ -65,6 +67,31 @@ export interface ThemeConfig {
   };
 }
 
+export interface Command {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  icon?: string;
+  keybinding?: string;
+  action: () => void | Promise<void>;
+}
+
+export interface TabInfo {
+  id: string;
+  title: string;
+  path: string;
+  active: boolean;
+  modified: boolean;
+}
+
+export interface SplitPane {
+  id: string;
+  direction: 'horizontal' | 'vertical';
+  size: number;
+  children: (SplitPane | TerminalSession)[];
+}
+
 export interface AppConfig {
   theme: ThemeConfig;
   widgets: WidgetInstance[];
@@ -78,5 +105,10 @@ export interface AppConfig {
   layout: {
     showWidgetPanel: boolean;
     widgetPanelWidth: number;
+    splitLayout: SplitPane | null;
+  };
+  commandPalette: {
+    maxResults: number;
+    fuzzySearch: boolean;
   };
 }

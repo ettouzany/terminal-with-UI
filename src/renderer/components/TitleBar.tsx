@@ -43,13 +43,19 @@ const ControlButton = styled.button`
 
 interface TitleBarProps {
   onToggleWidgets: () => void;
+  onOpenStore?: () => void;
 }
 
-export const TitleBar: React.FC<TitleBarProps> = ({ onToggleWidgets }) => {
+export const TitleBar: React.FC<TitleBarProps> = ({ onToggleWidgets, onOpenStore }) => {
   return (
     <TitleBarContainer>
       <Title>Widget Terminal</Title>
       <Controls>
+        {onOpenStore && (
+          <ControlButton onClick={onOpenStore}>
+            🏪 Store
+          </ControlButton>
+        )}
         <ControlButton onClick={onToggleWidgets}>
           Widgets
         </ControlButton>

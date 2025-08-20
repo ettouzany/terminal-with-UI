@@ -1,6 +1,7 @@
 import { Widget, WidgetCategory } from '../../shared/types';
 import { ClockWidget } from '../components/widgets/ClockWidget';
 import { SystemMonitorWidget } from '../components/widgets/SystemMonitorWidget';
+import { CommandShortcutsWidget } from '../components/widgets/CommandShortcutsWidget';
 
 export class WidgetRegistry {
   private static instance: WidgetRegistry;
@@ -42,6 +43,16 @@ export class WidgetRegistry {
         showMemory: true,
         showUptime: true,
       },
+    });
+
+    this.register({
+      id: 'command-shortcuts',
+      name: 'Command Shortcuts',
+      component: CommandShortcutsWidget,
+      icon: '⚡',
+      description: 'Quick access to commonly used terminal commands',
+      category: 'productivity',
+      configurable: false,
     });
   }
 

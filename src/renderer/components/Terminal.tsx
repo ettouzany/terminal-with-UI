@@ -118,6 +118,7 @@ export const Terminal: React.FC = () => {
     };
   }, [terminalId]);
 
+
   return (
     <TerminalContainer>
       <TerminalWrapper>

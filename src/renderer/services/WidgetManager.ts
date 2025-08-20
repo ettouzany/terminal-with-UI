@@ -21,6 +21,7 @@ export class WidgetManager {
   private loadDefaultWidgets(): void {
     this.createInstance('clock', { x: 0, y: 0 }, { width: 250, height: 120 });
     this.createInstance('system-monitor', { x: 0, y: 140 }, { width: 250, height: 180 });
+    this.createInstance('command-shortcuts', { x: 0, y: 340 }, { width: 250, height: 300 });
   }
 
   public createInstance(

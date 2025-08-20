@@ -38,17 +38,32 @@ class TerminalApp {
         nodeIntegration: false,
         contextIsolation: true,
         preload: path.join(__dirname, 'preload.js'),
+        webSecurity: false, // Temporarily disable for debugging
       },
       titleBarStyle: 'hiddenInset',
       vibrancy: 'under-window',
       visualEffectState: 'active',
     });
 
-    if (process.env.NODE_ENV === 'development') {
+    const isDev = process.env.NODE_ENV === 'development';
+    
+    if (isDev) {
       this.mainWindow.loadURL('http://localhost:3000');
       this.mainWindow.webContents.openDevTools();
     } else {
-      this.mainWindow.loadFile(path.join(__dirname, 'renderer/index.html'));
+      const htmlPath = path.join(__dirname, 'renderer/index.html');
+      console.log('Loading HTML from:', htmlPath);
+      
+      this.mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription) => {
+        console.error('Failed to load:', errorCode, errorDescription);
+      });
+      
+      this.mainWindow.webContents.on('console-message', (event, level, message, line, sourceId) => {
+        console.log(`Console [${level}]:`, message);
+      });
+      
+      this.mainWindow.loadFile(htmlPath);
+      this.mainWindow.webContents.openDevTools(); // Keep dev tools for debugging
     }
   }
 
