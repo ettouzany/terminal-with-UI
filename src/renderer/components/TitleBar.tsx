@@ -3,12 +3,12 @@ import styled from 'styled-components';
 
 const TitleBarContainer = styled.div`
   height: 32px;
-  background: #2d2d2d;
+  background: var(--app-header, #2d2d2d);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
-  border-bottom: 1px solid #3e3e3e;
+  border-bottom: 1px solid var(--app-border, #3e3e3e);
   -webkit-app-region: drag;
   user-select: none;
 `;
@@ -16,7 +16,7 @@ const TitleBarContainer = styled.div`
 const Title = styled.h1`
   font-size: 14px;
   font-weight: 500;
-  color: #cccccc;
+  color: var(--app-text, #cccccc);
   margin: 0;
 `;
 

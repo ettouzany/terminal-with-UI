@@ -13,7 +13,8 @@ const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: #1e1e1e;
+  background: var(--app-bg, #1e1e1e);
+  color: var(--app-text, #ffffff);
 `;
 
 const MainContent = styled.div`

@@ -2,6 +2,8 @@ import { Widget, WidgetCategory } from '../../shared/types';
 import { ClockWidget } from '../components/widgets/ClockWidget';
 import { SystemMonitorWidget } from '../components/widgets/SystemMonitorWidget';
 import { CommandShortcutsWidget } from '../components/widgets/CommandShortcutsWidget';
+import { StylesWidget } from '../components/widgets/StylesWidget';
+import { TestWidget } from '../components/widgets/TestWidget';
 
 export class WidgetRegistry {
   private static instance: WidgetRegistry;
@@ -52,6 +54,26 @@ export class WidgetRegistry {
       icon: '⚡',
       description: 'Quick access to commonly used terminal commands',
       category: 'productivity',
+      configurable: false,
+    });
+
+    this.register({
+      id: 'styles-themes',
+      name: 'Styles & Themes',
+      component: StylesWidget,
+      icon: '🎨',
+      description: 'Customize terminal and application themes with preset and custom colors',
+      category: 'customization',
+      configurable: false,
+    });
+
+    this.register({
+      id: 'test-widget',
+      name: 'Test Widget',
+      component: TestWidget,
+      icon: '🧪',
+      description: 'Test widget to verify store functionality',
+      category: 'development',
       configurable: false,
     });
   }

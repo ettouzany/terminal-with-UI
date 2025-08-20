@@ -22,6 +22,7 @@ export type WidgetCategory =
   | 'development' 
   | 'media'
   | 'entertainment'
+  | 'customization'
   | 'custom';
 
 export interface WidgetInstance {

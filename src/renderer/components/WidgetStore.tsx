@@ -229,13 +229,14 @@ interface StoreWidget extends Widget {
 }
 
 const categories = [
-  { id: 'all', name: 'All Widgets', count: 14 },
+  { id: 'all', name: 'All Widgets', count: 15 },
   { id: 'productivity', name: 'Productivity', count: 4 },
   { id: 'system', name: 'System', count: 4 },
   { id: 'development', name: 'Development', count: 2 },
   { id: 'media', name: 'Media', count: 1 },
   { id: 'time', name: 'Time & Date', count: 1 },
   { id: 'entertainment', name: 'Entertainment', count: 2 },
+  { id: 'customization', name: 'Customization', count: 1 },
 ];
 
 interface WidgetStoreProps {
@@ -385,6 +386,19 @@ export const WidgetStore: React.FC<WidgetStoreProps> = ({ isOpen, onClose }) => 
         rating: 4.3,
         installed: false,
       },
+      {
+        id: 'styles-themes',
+        name: 'Styles & Themes',
+        icon: '🎨',
+        description: 'Customize terminal and application themes with preset and custom colors',
+        category: 'customization',
+        component: () => null,
+        author: 'Terminal Team',
+        version: '1.0.0',
+        downloads: 2500,
+        rating: 4.9,
+        installed: false,
+      },
     ];
 
     // Check which widgets are already installed
@@ -449,6 +463,16 @@ export const WidgetStore: React.FC<WidgetStoreProps> = ({ isOpen, onClose }) => 
           
           // Auto-create an instance
           widgetManager.createInstance(widget.id, { x: 0, y: 500 }, { width: 280, height: 400 });
+        } else if (widget.id === 'styles-themes') {
+          // Import and register the styles widget
+          const { StylesWidget } = await import('./widgets/StylesWidget');
+          widgetRegistry.register({
+            ...widget,
+            component: StylesWidget,
+          });
+          
+          // Auto-create an instance
+          widgetManager.createInstance(widget.id, { x: 50, y: 50 }, { width: 500, height: 600 });
         }
         
         setInstalledWidgets(prev => new Set([...prev, widget.id]));

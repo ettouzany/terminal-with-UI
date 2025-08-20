@@ -5,8 +5,8 @@ import { TerminalSessionManager, TerminalTab } from '../services/TerminalSession
 const TabsContainer = styled.div`
   display: flex;
   align-items: center;
-  background: #2d2d2d;
-  border-bottom: 1px solid #404040;
+  background: var(--app-header, #2d2d2d);
+  border-bottom: 1px solid var(--app-border, #404040);
   padding: 0;
   gap: 0;
   overflow-x: auto;
@@ -17,7 +17,7 @@ const TabsContainer = styled.div`
   }
   
   &::-webkit-scrollbar-track {
-    background: #2d2d2d;
+    background: var(--app-header, #2d2d2d);
   }
   
   &::-webkit-scrollbar-thumb {
@@ -32,24 +32,24 @@ const Tab = styled.div<{ isActive: boolean }>`
   padding: 8px 16px;
   min-width: 120px;
   max-width: 200px;
-  background: ${props => props.isActive ? '#1e1e1e' : '#2d2d2d'};
-  border-right: 1px solid #404040;
+  background: ${props => props.isActive ? 'var(--app-bg, #1e1e1e)' : 'var(--app-header, #2d2d2d)'};
+  border-right: 1px solid var(--app-border, #404040);
   cursor: pointer;
   user-select: none;
   position: relative;
   transition: background-color 0.2s ease;
   
   &:hover {
-    background: ${props => props.isActive ? '#1e1e1e' : '#333'};
+    background: ${props => props.isActive ? 'var(--app-bg, #1e1e1e)' : '#333'};
   }
   
   ${props => props.isActive && `
-    border-bottom: 2px solid #007acc;
+    border-bottom: 2px solid var(--app-accent, #007acc);
   `}
 `;
 
 const TabTitle = styled.span`
-  color: #ffffff;
+  color: var(--app-text, #ffffff);
   font-size: 12px;
   white-space: nowrap;
   overflow: hidden;

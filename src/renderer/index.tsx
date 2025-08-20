@@ -47,6 +47,7 @@ class ErrorBoundary extends React.Component<
 
 // Direct import instead of lazy loading
 import { App } from './App-working';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 const LoadingFallback = () => (
   <div style={{ 
@@ -72,7 +73,9 @@ try {
 
   root.render(
     <ErrorBoundary>
-      <App />
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
     </ErrorBoundary>
   );
 } catch (error) {

@@ -6,11 +6,11 @@ const StatusBarContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   height: 24px;
-  background: #2d2d2d;
-  border-top: 1px solid #3e3e3e;
+  background: var(--app-header, #2d2d2d);
+  border-top: 1px solid var(--app-border, #3e3e3e);
   padding: 0 12px;
   font-size: 11px;
-  color: #cccccc;
+  color: var(--app-text, #cccccc);
   font-family: 'Monaco', 'Menlo', monospace;
   user-select: none;
 `;

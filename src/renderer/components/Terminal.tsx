@@ -7,7 +7,7 @@ import 'xterm/css/xterm.css';
 
 const TerminalContainer = styled.div`
   flex: 1;
-  padding: 16px;
+  padding: 0;
   background: #1e1e1e;
   position: relative;
 `;
@@ -16,9 +16,9 @@ const TerminalWrapper = styled.div`
   width: 100%;
   height: 100%;
   background: #000000;
-  border-radius: 8px;
-  padding: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+  padding: 2px;
+  box-shadow: none;
 `;
 
 interface TerminalProps {
@@ -30,6 +30,30 @@ export const Terminal: React.FC<TerminalProps> = ({ sessionId }) => {
   const xtermRef = useRef<XTerm | null>(null);
   const fitAddonRef = useRef<FitAddon | null>(null);
   const [terminalId] = useState(() => sessionId || `terminal-${Date.now()}`);
+  const [currentTheme, setCurrentTheme] = useState(() => {
+    const saved = localStorage.getItem('terminal-theme-config');
+    return saved ? JSON.parse(saved) : {
+      background: '#000000',
+      foreground: '#ffffff',
+      cursor: '#ffffff',
+      black: '#000000',
+      red: '#cd3131',
+      green: '#0dbc79',
+      yellow: '#e5e510',
+      blue: '#2472c8',
+      magenta: '#bc3fbc',
+      cyan: '#11a8cd',
+      white: '#e5e5e5',
+      brightBlack: '#666666',
+      brightRed: '#f14c4c',
+      brightGreen: '#23d18b',
+      brightYellow: '#f5f543',
+      brightBlue: '#3b8eea',
+      brightMagenta: '#d670d6',
+      brightCyan: '#29b8db',
+      brightWhite: '#e5e5e5',
+    };
+  });
 
   useEffect(() => {
     if (!terminalRef.current) return;
@@ -38,27 +62,7 @@ export const Terminal: React.FC<TerminalProps> = ({ sessionId }) => {
       fontFamily: '"Monaco", "Menlo", "Ubuntu Mono", monospace',
       fontSize: 14,
       lineHeight: 1.2,
-      theme: {
-        background: '#000000',
-        foreground: '#ffffff',
-        cursor: '#ffffff',
-        black: '#000000',
-        red: '#cd3131',
-        green: '#0dbc79',
-        yellow: '#e5e510',
-        blue: '#2472c8',
-        magenta: '#bc3fbc',
-        cyan: '#11a8cd',
-        white: '#e5e5e5',
-        brightBlack: '#666666',
-        brightRed: '#f14c4c',
-        brightGreen: '#23d18b',
-        brightYellow: '#f5f543',
-        brightBlue: '#3b8eea',
-        brightMagenta: '#d670d6',
-        brightCyan: '#29b8db',
-        brightWhite: '#e5e5e5',
-      },
+      theme: currentTheme,
       cursorBlink: true,
       cursorStyle: 'block',
       scrollback: 1000,
@@ -109,10 +113,20 @@ export const Terminal: React.FC<TerminalProps> = ({ sessionId }) => {
       }
     };
 
+    const handleThemeChange = (event: CustomEvent) => {
+      const newTheme = event.detail;
+      setCurrentTheme(newTheme);
+      if (xtermRef.current) {
+        xtermRef.current.options.theme = newTheme;
+      }
+    };
+
     window.addEventListener('resize', handleResize);
+    window.addEventListener('terminal-theme-change', handleThemeChange as EventListener);
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('terminal-theme-change', handleThemeChange as EventListener);
       if (window.terminalAPI) {
         window.terminalAPI.closeTerminal(terminalId);
       }
