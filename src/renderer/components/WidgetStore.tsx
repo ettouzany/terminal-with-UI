@@ -229,9 +229,9 @@ interface StoreWidget extends Widget {
 }
 
 const categories = [
-  { id: 'all', name: 'All Widgets', count: 13 },
+  { id: 'all', name: 'All Widgets', count: 14 },
   { id: 'productivity', name: 'Productivity', count: 4 },
-  { id: 'system', name: 'System', count: 3 },
+  { id: 'system', name: 'System', count: 4 },
   { id: 'development', name: 'Development', count: 2 },
   { id: 'media', name: 'Media', count: 1 },
   { id: 'time', name: 'Time & Date', count: 1 },
@@ -255,6 +255,19 @@ export const WidgetStore: React.FC<WidgetStoreProps> = ({ isOpen, onClose }) => 
   useEffect(() => {
     // Load available widgets from "marketplace"
     const mockMarketplaceWidgets: StoreWidget[] = [
+      {
+        id: 'task-manager',
+        name: 'Task Manager',
+        icon: '⚡',
+        description: 'Monitor system processes, CPU and memory usage with process management controls',
+        category: 'system',
+        component: () => null, // Will be loaded dynamically
+        author: 'Terminal Team',
+        version: '1.0.0',
+        downloads: 1342,
+        rating: 4.8,
+        installed: false,
+      },
       {
         id: 'video-background',
         name: 'Video Background',
@@ -406,7 +419,17 @@ export const WidgetStore: React.FC<WidgetStoreProps> = ({ isOpen, onClose }) => 
         });
       } else {
         // Install widget - in real implementation, this would load the widget dynamically
-        if (widget.id === 'video-background') {
+        if (widget.id === 'task-manager') {
+          // Import and register the task manager widget
+          const { TaskManagerWidget } = await import('./widgets/TaskManagerWidget');
+          widgetRegistry.register({
+            ...widget,
+            component: TaskManagerWidget,
+          });
+          
+          // Auto-create an instance
+          widgetManager.createInstance(widget.id, { x: 300, y: 100 }, { width: 320, height: 450 });
+        } else if (widget.id === 'video-background') {
           // Import and register the video background widget
           const { VideoBackgroundWidget } = await import('./widgets/VideoBackgroundWidget');
           widgetRegistry.register({

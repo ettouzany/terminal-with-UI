@@ -5,6 +5,9 @@ import { TitleBar } from './components/TitleBar';
 import { StatusBar } from './components/StatusBar';
 import { WidgetPanel } from './components/WidgetPanel';
 import { WidgetStore } from './components/WidgetStore';
+import { TerminalTabs } from './components/TerminalTabs';
+import { TerminalLayout } from './components/TerminalLayout';
+import { TerminalSessionManager, TerminalTab } from './services/TerminalSessionManager';
 
 const AppContainer = styled.div`
   display: flex;
@@ -77,6 +80,11 @@ const MobileBackdrop = styled.div<{ isVisible: boolean }>`
 export const App: React.FC = () => {
   const [isWidgetPanelOpen, setIsWidgetPanelOpen] = useState(true);
   const [isWidgetStoreOpen, setIsWidgetStoreOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<TerminalTab | null>(null);
+  const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
+  const [layoutKey, setLayoutKey] = useState(0); // Force re-render key
+  
+  const sessionManager = TerminalSessionManager.getInstance();
 
   const toggleWidgetPanel = useCallback(() => {
     setIsWidgetPanelOpen(prev => !prev);
@@ -90,6 +98,46 @@ export const App: React.FC = () => {
     setIsWidgetStoreOpen(false);
   }, []);
 
+  // Terminal management
+  useEffect(() => {
+    const updateActiveTab = () => {
+      const activeTab = sessionManager.getActiveTab();
+      setActiveTab(activeTab || null);
+      setLayoutKey(prev => prev + 1); // Force re-render
+      
+      // Set the first session in the active tab as active session
+      if (activeTab) {
+        const sessions = sessionManager.getSessionsInLayout(activeTab.layout);
+        if (sessions.length > 0) {
+          setActiveSessionId(sessions[0].id);
+        }
+      }
+    };
+
+    updateActiveTab(); // Initial load
+    return sessionManager.addListener(updateActiveTab);
+  }, [sessionManager]);
+
+  const handleTabChange = useCallback((tabId: string) => {
+    const tab = sessionManager.getTab(tabId);
+    if (tab) {
+      setActiveTab(tab);
+      const sessions = sessionManager.getSessionsInLayout(tab.layout);
+      if (sessions.length > 0) {
+        setActiveSessionId(sessions[0].id);
+      }
+    }
+  }, [sessionManager]);
+
+  const handleSessionClick = useCallback((sessionId: string) => {
+    setActiveSessionId(sessionId);
+  }, []);
+
+  const handleSplit = useCallback((direction: 'horizontal' | 'vertical') => {
+    // Split handling is managed by the TerminalLayout component
+    console.log(`Split ${direction}`);
+  }, []);
+
   return (
     <AppContainer>
       <TitleBar 
@@ -98,7 +146,18 @@ export const App: React.FC = () => {
       />
       <MainContent>
         <TerminalContainer>
-          <Terminal />
+          <TerminalTabs
+            onTabChange={handleTabChange}
+            onSplit={handleSplit}
+          />
+          {activeTab && (
+            <TerminalLayout
+              key={layoutKey}
+              layout={activeTab.layout}
+              activeSessionId={activeSessionId}
+              onSessionClick={handleSessionClick}
+            />
+          )}
         </TerminalContainer>
         <SidePanel isOpen={isWidgetPanelOpen}>
           <WidgetPanel />

@@ -21,11 +21,15 @@ const TerminalWrapper = styled.div`
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 `;
 
-export const Terminal: React.FC = () => {
+interface TerminalProps {
+  sessionId?: string;
+}
+
+export const Terminal: React.FC<TerminalProps> = ({ sessionId }) => {
   const terminalRef = useRef<HTMLDivElement>(null);
   const xtermRef = useRef<XTerm | null>(null);
   const fitAddonRef = useRef<FitAddon | null>(null);
-  const [terminalId] = useState(() => `terminal-${Date.now()}`);
+  const [terminalId] = useState(() => sessionId || `terminal-${Date.now()}`);
 
   useEffect(() => {
     if (!terminalRef.current) return;
